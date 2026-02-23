@@ -99,6 +99,7 @@ def common_bits(hash1, hash2):
         x = x >> 1
     return 64 - count
     
+    
 if len(sys.argv) != 3:
     print("Usage: python script.py url1 url2")
     sys.exit(1)
@@ -128,3 +129,4 @@ hash2 = simhash(freq2)
 print()
 print("Common bits in simhashes:", common_bits(hash1, hash2))
 print()
+
