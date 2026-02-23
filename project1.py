@@ -35,63 +35,63 @@ def get_page_data(url):
 def get_words(text):
     text = text.lower()
     words = []
-    current = ""
+    curr_word = ""
     for ch in text:
         if ch.isalnum():
-            current += ch
+            curr_word += ch
         else:
-            if current != "":
-                words.append(current)
-                current = ""
-    if current != "":
-        words.append(current)
+            if curr_word != "":
+                words.append(curr_word)
+                curr_word = ""
+    if curr_word != "":
+        words.append(curr_word)
     return words
     
 
 def word_freq(text):
     words = get_words(text)
     freq = {}
-    for w in words:
-        if w in freq:
-            freq[w] += 1
+    for word in words:
+        if word in freq:
+            freq[word] += 1
         else:
-            freq[w] = 1
+            freq[word] = 1
     return freq
     
 
 def word_hash(word):
     p = 53
     m = 2**64
-    h = 0
+    hash = 0
     pow = 1
     for ch in word:
-        h = (h + ord(ch) * pow) % m
+        hash = (hash + ord(ch) * pow) % m
         pow = (pow * p) % m
-    return h
+    return hash
     
 
 def simhash(freq):
     bits = [0] * 64
     for word in freq:
-        h = word_hash(word)
+        hash = word_hash(word)
         count = freq[word]
         
         for i in range(64):
-            bit = (h >> i) & 1
+            bit = (hash >> i) & 1
             if bit == 1:
                 bits[i] = bits[i] + count
             else:
                 bits[i] = bits[i] - count
 
-    sim_val = 0
+    sim_hash_val = 0
     for i in range(64):
         if bits[i] > 0:
-            sim_val = sim_val + (1 << i)
-    return sim_val
+            sim_hash_val = sim_hash_val + (1 << i)
+    return sim_hash_val
     
 
-def common_bits(h1, h2):
-    x = h1 ^ h2
+def common_bits(hash1, hash2):
+    x = hash1 ^ hash2
     count = 0
     for i in range(64):
         if x & 1 == 1:
@@ -128,4 +128,3 @@ hash2 = simhash(freq2)
 print()
 print("Common bits in simhashes:", common_bits(hash1, hash2))
 print()
-
